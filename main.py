@@ -22,10 +22,10 @@ def get_unused_port():
 port = get_unused_port()
 
 # 启动FastAPI服务
-t = threading.Thread(target=uvicorn.run, args=(app,), kwargs={"host":"0.0.0.0", "port": port})
+t = threading.Thread(target=uvicorn.run, args=(app,), kwargs={"host": "0.0.0.0", "port": port})
 t.daemon = True
 t.start()
 
 # 在PyWebview应用程序中加载FastAPI应用程序的URL
-webview.create_window('FastAPI Desktop', f'http://127.0.0.1:{port}/index.html')
+webview.create_window('Hipy GUI', f'http://127.0.0.1:{port}/index.html')
 webview.start()
