@@ -7,6 +7,16 @@ defineProps({
 
 const count = ref(0)
 const url = ref(location.href)
+const code = ref('1');
+
+const show_notification = ()=>{
+  try {
+    // code.value = JSON.stringify(Object.keys(window.pywebview))+typeof(window.pywebview)+typeof(window.pywebview.api)+'\n'+JSON.stringify(Object.keys(window.pywebview.api));
+    window.pywebview.api.show_notification();
+  }catch (e) {
+    alert(e.message)
+  }
+}
 
 </script>
 
@@ -15,10 +25,12 @@ const url = ref(location.href)
 
   <div class="card">
     <button type="button" @click="count++">count is {{ count }}</button>
+    <button type="button" @click="show_notification">显示通知</button>
     <p>url is {{ url }}</p>
     <p>
       Edit
       <code>components/HelloWorld.vue</code> to test HMR
+      <code>{{ code }}}</code>
     </p>
   </div>
 
