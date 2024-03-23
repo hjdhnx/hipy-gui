@@ -2,7 +2,6 @@
 logs
 *.log
 
-public
 build
 dist
 dist-ssr
