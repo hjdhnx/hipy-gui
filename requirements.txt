@@ -1,5 +1,16 @@
 uvicorn
 pywebview
-fastapi
+fastapi==0.86.0
 typer
+requests
+ujson
+quickjs
+pycryptodome==3.19.0
+python-dateutil
+pyquery
+jsonpath
+pydantic==1.10.2
+python-dotenv==0.21.0
+jinja2
+cachetools
 PyInstaller

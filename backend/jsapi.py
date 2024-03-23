@@ -25,6 +25,9 @@ class JsApi:
         # self.w.set_title('hello world')
         self._window.create_confirmation_dialog("Hello", "This is a desktop notification!")
 
+    def show_work_path(self):
+        return Path(os.getcwd()).as_posix()
+
     def select_file(self):
         file_types = ('Image Files (*.bmp;*.jpg;*.gif;*.js;*.json;*.py;*.txt;*.md)', 'All files (*.*)')
         file_path = self._window.create_file_dialog(webview.OPEN_DIALOG, allow_multiple=True, file_types=file_types)

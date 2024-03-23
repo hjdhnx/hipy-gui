@@ -5,7 +5,10 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('public', 'public')],   # 这里需要添加你的静态文件路径
+    datas=[('public', 'public'),('backend/templates', 'backend/templates'),('backend/configs', 'backend/configs'),
+    ('backend/t4/files', 'backend/t4/files'),('backend/t4/spiders', 'backend/t4/spiders'),('backend/t4/qjs_drpy', 'backend/t4/qjs_drpy'),
+    ('backend/t4/base', 'backend/t4/base')
+    ],   # 这里需要添加你的静态文件路径
     recurse=['fastapi', 'starlette'],  # 这里需要添加你的包名
     hiddenimports=['uvicorn.logging'],  # 这里需要添加你的包名, 加入第三方包隐试调用的其它包
     hookspath=[],

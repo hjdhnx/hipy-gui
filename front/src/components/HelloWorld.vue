@@ -8,6 +8,7 @@ defineProps({
 const count = ref(0)
 const url = ref(location.href)
 const fpath = ref('')
+const wpath = ref('')
 const fname = ref('')
 const code = ref('1');
 
@@ -31,6 +32,12 @@ const select_file = () => {
   }
 }
 
+const show_work_path = () =>{
+  pywebview.api.show_work_path().then(response => {
+      wpath.value = response
+    });
+}
+
 const save_file_dialog = () => {
   try {
     pywebview.api.save_file_dialog();
@@ -51,9 +58,12 @@ const updateFilePath = (fpath) => {
   <div class="card">
     <button type="button" @click="count++">count is {{ count }}</button>
     <button type="button" @click="show_notification">显示通知</button>
+    <button type="button" @click="show_work_path">显示工作目录</button>
     <button type="button" @click="select_file">选择文件</button>
     <button type="button" @click="save_file_dialog">保存文件</button>
-    <p>url is {{ url }}</p>
+    <p><a href="/doc" target="_blank">接口文档</a></p>
+    <p>url is <a :href="url" target="_blank">{{ url }}</a></p>
+    <p v-show="wpath">wpath is {{ wpath }}</p>
     <p v-show="fpath">fpath is {{ fpath }}</p>
     <p v-show="fname">fname is {{ fname }}</p>
     <p>

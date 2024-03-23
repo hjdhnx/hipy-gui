@@ -1,15 +1,22 @@
 import random
 import socket
+
 import uvicorn
 import webview
 import threading
 from backend.app import app
 from backend.jsapi import jsapi
 
+import sys
+
+# 将根目录添加到系统路径
+sys.path.append('./backend/')
+
 
 def get_unused_port():
     """获取未被使用的端口"""
-    port = 9978
+    port = 5707
+    # port = 9978
     ok = True
     while ok:
         # port = random.randint(1024, 65535)  # 端口范围一般为1024-65535
