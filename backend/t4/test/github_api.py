@@ -30,7 +30,7 @@ def getContents(repo, path, token):
     return res
 
 
-def get_js_files(repo='hjdhnx/dr_py', path='js', token='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'):
+def get_js_files(repo='hjdhnx/dr_py', path='js', token=''):
     files = getContents(repo, path, token)
     js_files = [file for file in files if str(file['name']).endswith('.js') and file['type'] == 'file']
     js_files = [{
