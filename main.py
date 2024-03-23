@@ -3,37 +3,24 @@ import socket
 import uvicorn
 import webview
 import threading
-import os
 from backend.app import app
-
-
-# https://pywebview.flowrl.com/guide/api.html
-
-class Api:
-    def __init__(self):
-        self.w = webview.Window
-
-    def show_notification(self):
-        # self.w.set_title('hello world')
-        self.w.create_confirmation_dialog("Hello", "This is a desktop notification!")
-
-    def select_file(self):
-        file_path = self.w.create_file_dialog(webview.OPEN_DIALOG)
-        if file_path:
-            self.w.evaluate_js(f'updateFilePath("{os.path.basename(file_path)}")')
+from backend.jsapi import jsapi
 
 
 def get_unused_port():
     """获取未被使用的端口"""
-    while True:
-        port = random.randint(1024, 65535)  # 端口范围一般为1024-65535
+    port = 9978
+    ok = True
+    while ok:
+        # port = random.randint(1024, 65535)  # 端口范围一般为1024-65535
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             sock.bind(("127.0.0.1", port))
             sock.close()
+            ok = False
             return port
         except OSError:
-            pass
+            port += 1
 
 
 port = get_unused_port()
@@ -43,8 +30,18 @@ t = threading.Thread(target=uvicorn.run, args=(app,), kwargs={"host": "0.0.0.0",
 t.daemon = True
 t.start()
 
-api = Api()
+chinese = {
+    'global.quitConfirmation': u'确定关闭?',
+}
 # 在PyWebview应用程序中加载FastAPI应用程序的URL
 # webview.create_window('Hipy GUI', f'http://127.0.0.1:{port}/index.html', js_api=api)
-webview.create_window('Hipy GUI', f'http://127.0.0.1:{port}/index.html', width=800, height=600, js_api=api)
-webview.start()
+window = webview.create_window('Hipy GUI', f'http://127.0.0.1:{port}/index.html',
+                               fullscreen=False,  # 以全屏模式启动
+                               # width=800,	# 自定义窗口大小
+                               # height=600,
+                               # resizable=False,  # 固定窗口大小
+                               text_select=False,  # 禁止选择文字内容
+                               confirm_close=True,  # 关闭时提示
+                               js_api=jsapi)
+jsapi.set_window(window)
+webview.start(localization=chinese)
