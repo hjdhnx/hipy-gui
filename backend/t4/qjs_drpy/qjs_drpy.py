@@ -45,16 +45,23 @@ class Drpy:
             _qjs_module_gbk = f.read()
         with open(_('qjs_module_crypto.js'), encoding='utf-8') as f:
             _qjs_module_crypto = f.read()
+        with open(_('qjs_module_jsencrypt.js'), encoding='utf-8') as f:
+            _qjs_module_jsencrypt = f.read()
+        with open(_('qjs_module_pako.js'), encoding='utf-8') as f:
+            _qjs_module_pako = f.read()
         with open(_('qjs_module_drpy2.js'), encoding='utf-8') as f:
             _qjs_module_drpy2 = f.read() + f'\nglobalThis.{self.key} = ' + '{ init, home, homeVod, category, detail, ' \
                                                                            'play, search, proxy, sniffer, isVideo};'
 
         ctx = initContext(Context(), url='', prefix_code='true', env={'debug': self.debug}, getParams=lambda: {},
                           getCryptoJS=lambda: 'true')
+        ctx.add_callable('getProxy', lambda is_public: self.getProxyUrl(is_public))
         ctx.module(_qjs_module_muban)
         ctx.module(_qjs_module_cheerio)
         ctx.module(_qjs_module_gbk)
         ctx.module(_qjs_module_crypto)
+        ctx.module(_qjs_module_jsencrypt)
+        ctx.module(_qjs_module_pako)
         ctx.module(_qjs_module_drpy2)
         return ctx
 
@@ -123,6 +130,18 @@ class Drpy:
     def playerContent(self, flag, id, vipFlags=None):
         return self.setDict(self.call('play', flag, id, vipFlags))
 
+    def localProxy(self, params):
+        return self.toDict(self.call('proxy', params))
+
+    def getProxyUrl(self, is_public=True):
+        """
+        获取本地代理地址
+        @param is_public: 是否外网
+        @return:
+        """
+        proxy_url = f'http://127.0.0.1:5707/api/v1/vod/{self._api}?pwd=dzyyds&proxy=true&do=js' if is_public else ''
+        return self.t4_js_api or proxy_url
+
     def isVideo(self):
         """
         返回是否为视频的匹配字符串
@@ -138,38 +157,26 @@ class Drpy:
         """
         # return 'reg:/video/adjump.*?ts'
 
-    def getProxyUrl(self):
-        """
-        获取本地代理地址
-        @return:
-        """
-        return self.t4_js_api
-
     @staticmethod
     def fixAdM3u8(*args):
         return fixAdM3u8(*args)
 
-    def localProxy(self, params):
-        return self.toDict(self.call('proxy', params))
-
 
 if __name__ == '__main__':
     drpy = Drpy(debug=1)
-    # drpy.init('https://ghproxy.liuzhicong.com/https://github.com/hjdhnx/dr_py/raw/main/js/荐片.js')
-    # drpy.init('https://ghproxy.liuzhicong.com/https://github.com/hjdhnx/dr_py/raw/main/js/555影视[飞].js')
-    # drpy.init('https://ghproxy.liuzhicong.com/https://github.com/hjdhnx/dr_py/raw/main/js/农民影视.js')
-    drpy.init('https://ghproxy.liuzhicong.com/https://github.com/hjdhnx/dr_py/raw/main/js/996影视.js')
-    # drpy.init('https://ghproxy.liuzhicong.com/https://github.com/hjdhnx/dr_py/raw/main/js/奇珍异兽.js')
+    with open('../files/drpy_js/农民影视新.js', encoding='utf-8') as f:
+        code = f.read()
+    drpy.init(code)
     drpy.setDebug(1)
     print(drpy.homeContent())
+    print(drpy.homeVideoContent())
+    print(drpy.categoryContent('2', 1, False, {}))
+    print(drpy.searchContent("斗罗大陆", False, 1))
+    print(drpy.detailContent('https://m.emsdn.cn/vod-detail-id-38818.html'))
     # f = quickjs.Function(
     #     "adder", """
     #             function adder(x, y) {
     #                 return x + y;
     #             }
     #             """)
-
-    print(drpy.categoryContent('3', 1, False, {}))
-    # print(drpy.detailContent("3$/detail/790.html"))
-    # print(drpy.playerContent("索尼", "https://www.cs1369.com/play/790-1-1.html", []))
-    # print(drpy.searchContent("斗罗大陆", False, 1))
+    print(drpy.playerContent("线路①", "https://m.emsdn.cn/vod-play-id-38818-src-1-num-1.html", []))

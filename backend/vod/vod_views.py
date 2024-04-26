@@ -6,7 +6,8 @@
 # Date  : 2023/12/7
 import base64
 import json
-import logging
+import ujson
+import os
 
 from fastapi import APIRouter, Request, Depends, Response, Query, File, UploadFile
 from fastapi.responses import RedirectResponse
@@ -27,15 +28,16 @@ from ..t4.qjs_drpy.qjs_drpy import Drpy
 
 router = APIRouter()
 
+access_name = 'vod:generate'
 api_url = ''
 API_STORE = {
 
 }
 
-@router.api_route(methods=['GET', 'POST', 'HEAD'], path=api_url + "/{api:path}", summary="生成Vod")
-def vod_generate(*, api: str = "", request: Request,
 
-                 ) -> Any:
+# u: Users = Depends(deps.user_perm([f"{access_name}:get"]))
+@router.api_route(methods=['GET', 'POST', 'HEAD'], path=api_url + "/{api:path}", summary="生成Vod")
+def vod_generate(*, api: str = "", request: Request,) -> Any:
     """
     这个接口千万不要写async def 否则类似这种内部接口文件请求将无法实现 http://192.168.31.49:5707/files/hipy/两个BT.json
     通过动态import的形式，统一处理vod:爬虫源T4接口
@@ -55,7 +57,7 @@ def vod_generate(*, api: str = "", request: Request,
     # 拿到query参数的字典
     params_dict = request.query_params.__dict__['_dict']
     # 拿到网页host地址
-    host = str(request.base_url)
+    host = str(request.base_url).rstrip('/')
     # 拿到完整的链接
     whole_url = str(request.url)
     # 拼接字符串得到t4_api本地代理接口地址
@@ -176,7 +178,8 @@ def vod_generate(*, api: str = "", request: Request,
 
     elif need_init and is_drpy:
         try:
-            vod.init(get_file_text(api_path))
+            js_code = get_file_text(api_path)
+            vod.init(js_code)
         except Exception as e:
             logger.info(f'初始化drpy源:{api}发生了错误:{e},下次将会重新初始化')
             del API_STORE[api]

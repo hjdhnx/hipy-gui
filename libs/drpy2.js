@@ -1,3 +1,16 @@
+import cheerio from 'assets://js/lib/cheerio.min.js';
+import 'assets://js/lib/crypto-js.js';
+import './jsencrypt.js';
+import './pako.min.js';
+// import JSEncrypt from './jsencrypt.js'; // 会导致壳子崩溃的
+import 模板 from './模板.js'
+import {gbkTool} from './gbk.js'
+
+// import cheerio from "https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/libs/cheerio.min.js";
+// import "https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/libs/crypto-js.js";
+// import 模板 from"https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/js/模板.js";
+// import {gbkTool} from 'https://ghproxy.net/https://raw.githubusercontent.com/hjdhnx/dr_py/main/libs/gbk.js'
+
 function init_test(){
     // console.log(typeof(CryptoJS));
     console.log("init_test_start");
@@ -23,6 +36,7 @@ function init_test(){
 
     console.log(JSON.stringify(rule));
     console.log("init_test_end");
+
 
     // log('typeof (JSEncrypt):'+typeof (JSEncrypt));
     // let publicKey = 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwEc7wBMtYKkxvrQNI3+ITBZwAkPkGvsv4TsAHFskKGZWz9eYl3scivhmlEfWHlEkdyb0m82CmB1qAgef+pD4cZu+Cdmm2e9lnExhLwm8cBgpkAen9QRNdjojZgxM0W+JcReH4W6pw+uFXiLRn4AIQkDftWGNLg6wlNS+39Z/RvP9zyATJLZ9AKDdHp62XMxEK1KZvWBuIg+Oa5UzgA9jy+2XyIqwhBtO8tPbUl21t2pvTzHoLUjSkPNm2LurcUk6+jQ2r6aiS2CN1NXIucPJU6mkuIQ821SjvkYPtIdRMntW4y2u4cyiqVEEQwlzWVMHh+/vfrWAQr9fgjDuYYtvPQIDAQAB';
@@ -2921,4 +2935,44 @@ function isVideo(url){
         log('成功执行辅助嗅探规则并检测到视频地址:\n'+rule.isVideo);
     }
     return result
+}
+
+function DRPY(){//导出函数
+    return {
+        init: init,
+        home: home,
+        homeVod: homeVod,
+        category: category,
+        detail: detail,
+        play: play,
+        search: search,
+        proxy:proxy,
+        sniffer:sniffer,
+        isVideo:isVideo
+    }
+}
+
+/**
+ * 导出函数无法简写成下面的形式:
+
+ export default {
+  ...DRPY,
+  DRPY
+ }
+
+ */
+
+// 导出函数对象
+export default {
+    init,
+    home,
+    homeVod,
+    category,
+    detail,
+    play,
+    search,
+    proxy,
+    sniffer,
+    isVideo,
+    DRPY,
 }

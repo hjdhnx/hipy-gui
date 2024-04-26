@@ -26,10 +26,11 @@ def get_file_text(filepath: str):
 
 
 def get_api_path(api: str):
+    work_path = Path(os.getcwd()).as_posix()
     if api.endswith('.js'):
-        api_path = os.path.join(BASE_DIR, f't4/files/drpy_js/{api}')
+        api_path = os.path.join(work_path, f'js/{api}')
     else:
-        api_path = os.path.join(BASE_DIR, f't4/spiders/{api}.py')
+        api_path = os.path.join(work_path, f'py/{api}.py')
     api_path = Path(api_path).as_posix()
     return api_path
 
